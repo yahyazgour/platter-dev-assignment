@@ -1,0 +1,221 @@
+{{ 'platter-featured-collection.css' | asset_url | stylesheet_tag }}
+
+<platter-featured-collection class="block py-24 px-8 md:px-0 mx-auto">
+  <div
+    class="flex justify-between items-center mb-16 mx-auto overflow-x-auto md:px-32 relative xl:max-w-[2150px]"
+  >
+    <span class="max-md:mx-auto font-serif text-5xl font-black leading-tight tracking-tight py-2 px-3">
+      {{- section.settings.title | escape -}}
+    </span>
+
+    <a href="{{ section.settings.collection.url }}" class="flex items-center gap-2 hover:underline max-md:hidden">
+      <span class="font-['Poppins sans serif'] font-semibold text-md leading-[140%] tracking-[0.03em] text-center color-[#5C553A]">
+        {{- section.settings.view_all_text | escape -}}
+      </span>
+      <svg
+        viewBox="0 0 20 20"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-label="arrow right"
+        class="h-7 w-7"
+      >
+        <path d="M3.33334 10H16.6667M16.6667 10L11.6667 5M16.6667 10L11.6667 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+    </a>
+  </div>
+
+  <div
+    class="relative w-full h-full overflow-hidden md:mt-4"
+  >
+    <div class="relative" style="--grid-gap--desktop: 24px; --grid-gap--mobile: 6px;">
+      <div
+        class="relative pb-8"
+      >
+        <div
+          class="flex justify-center"
+        >
+          <div
+            class="w-full max-md:flex max-md:flex-wrap max-md:gap-4 md:flex md:mx-auto md:overflow-x-auto md:gap-6 md:pb-12 md:snap-mandatory md:snap-x md:scrollbar-none lg:overflow-hidden md:px-32 md:relative md:cursor-grab"
+            data-scroll-container
+          >
+            {%- for product in section.settings.collection.products limit: section.settings.products_to_show -%}
+              <article
+                class="max-md:w-[calc(50%-8px)] md:w-[22%] shrink-0 flex flex-col rounded-lg overflow-hidden mb-6 md:mb-0 {% if forloop.index > 4 %}max-md:hidden{% endif %} mobile-product"
+                data-scroll-item
+                data-product-card="{{ product.handle }}"
+                data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+              >
+                <a
+                  class="relative overflow-hidden aspect-square mb-4"
+                  href="{{ product.url }}"
+                  aria-label="{{ product.title }}"
+                >
+                  <div class="absolute inset-0 h-full w-full overflow-hidden">
+                    <img
+                      src="{{ product.featured_image | img_url: '500x', crop: 'center' }}"
+                      alt="{{ product.featured_image.alt | escape }}"
+                      loading="lazy"
+                      width="500"
+                      height="500"
+                      class="w-full h-full object-cover rounded-lg"
+                      sizes="(max-width: 768px) 50vw, 280px"
+                      srcset="
+                        {{ product.featured_image | img_url: '200x' }} 200w,
+                        {{ product.featured_image | img_url: '300x' }} 300w,
+                        {{ product.featured_image | img_url: '400x' }} 400w,
+                        {{ product.featured_image | img_url: '500x' }} 500w
+                      "
+                    >
+                  </div>
+                  <div class="absolute top-3 left-3">
+                    <div class="bg-white text-black border-1 text-sm tracking-wider px-2 py-1 font-bold rounded-full">
+                      BEST SELLER
+                    </div>
+                  </div>
+
+                  {% if product.compare_at_price > product.price %}
+                    <div class="absolute top-3 right-3">
+                      <div class="bg-[#5C7962] text-white border-1 border-black text-sm tracking-wider px-2 py-1 font-bold rounded-full">
+                        SAVE 15%
+                      </div>
+                    </div>
+                  {% endif %}
+                </a>
+
+                <div class="px-3 space-y-5 md:space-y-4">
+                  <a
+                    href="{{ product.url }}"
+                    class="block font-bold text-xl md:text-2xl leading-none tracking-[0.03em] uppercase text-[#1C1D1D] hover:underline"
+                  >
+                    {{ product.title }}
+                  </a>
+
+                  <div class="flex items-center gap-1">
+                    <div class="flex items-center gap-1">
+                      <span class="sr-only">{{ product.metafields.reviews.rating }}/5.0 Rating</span>
+                      {% for i in (1..5) %}
+                        <svg
+                          class="w-4 h-4 text-black"
+                          fill="currentColor"
+                          aria-label="star"
+                          viewBox="0 0 15 15"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path d="M7.38091 0.0973503C7.10868 -0.0324501 6.7924 -0.0324501 6.52016 0.0973503C6.28482 0.20956 6.15506 0.404385 6.08962 0.511266C6.02198 0.621759 5.95253 0.762511 5.88485 0.899703L4.4477 3.81123L1.23299 4.2811C1.08167 4.30319 0.926395 4.32585 0.800452 4.35614C0.678611 4.38543 0.453338 4.4488 0.274064 4.63803C0.0666695 4.85694 -0.0308653 5.15775 0.00861507 5.45671C0.0427423 5.71513 0.187972 5.89863 0.269439 5.99385C0.35365 6.09227 0.466084 6.20174 0.57566 6.30842L2.90086 8.57316L2.35221 11.772C2.32631 11.9228 2.29974 12.0776 2.28951 12.2068C2.27962 12.3317 2.27006 12.5656 2.39452 12.7948C2.53849 13.0598 2.79441 13.2457 3.09099 13.3007C3.3474 13.3483 3.56692 13.2668 3.68268 13.2188C3.80238 13.1691 3.94132 13.096 4.07676 13.0248L6.95054 11.5135L9.82433 13.0248C9.95976 13.096 10.0987 13.1691 10.2184 13.2188C10.3342 13.2668 10.5537 13.3483 10.8101 13.3007C11.1067 13.2457 11.3626 13.0598 11.5065 12.7948C11.631 12.5656 11.6215 12.3317 11.6116 12.2068C11.6013 12.0776 11.5748 11.9229 11.5489 11.772L11.0002 8.57316L13.3254 6.3084C13.435 6.20172 13.5474 6.09226 13.6316 5.99385C13.7131 5.89863 13.8583 5.71513 13.8925 5.45671C13.9319 5.15775 13.8344 4.85694 13.627 4.63803C13.4477 4.4488 13.2225 4.38543 13.1006 4.35614C12.9747 4.32585 12.8194 4.30319 12.6681 4.2811L9.45338 3.81123L8.01625 0.899753C7.94856 0.762552 7.8791 0.621767 7.81145 0.511266C7.74601 0.404385 7.61626 0.20956 7.38091 0.0973503Z"></path>
+                        </svg>
+                      {% endfor %}
+                    </div>
+                    <span class="text-xs text-gray-500">
+                      {{- product.metafields.reviews.rating_count | default: '1,234' }} Reviews</span
+                    >
+                  </div>
+
+                  <div class="flex items-baseline gap-2 font-bold text-xl leading-none uppercase">
+                    {% if product.compare_at_price > product.price %}
+                      <span class="text-gray-500 line-through">{{ product.compare_at_price | money }}</span>
+                    {% endif %}
+                    <span>{{ product.price | money }}</span>
+                  </div>
+                </div>
+              </article>
+            {%- endfor -%}
+          </div>
+        </div>
+
+        <div
+          data-scroll-controls
+          class="select-none flex justify-between items-center mx-auto md:px-32 relative xl:max-w-[2150px] max-md:hidden"
+        >
+          <div data-scroll-controls aria-hidden="true" class="relative w-full">
+            <div
+              class="group/scrollbar absolute top-full flex h-4 w-full cursor-pointer touch-none items-center"
+              data-scroll-bar
+            >
+              <div class="relative h-1 w-full bg-gray-200 transition-all ease-in-out">
+                <button
+                  type="button"
+                  class="absolute top-1/2 flex min-h-full cursor-grab items-center justify-center will-change-transform active:cursor-grabbing"
+                  data-scroll-bar-thumb
+                  aria-label="Scrollbar Thumb"
+                >
+                  <span
+                    class="block h-1 w-full bg-gray-900 transition-all ease-in-out group-hover/scrollbar:h-2 rounded-md"
+                  ></span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="md:hidden mt-6 flex justify-center">
+    <button
+      type="button"
+      class="bg-black hover:bg-gray-800 text-white py-3 px-8 rounded-full font-bold text-lg transition-all duration-200 ease-in-out hover:-translate-y-0.5 active:translate-y-0"
+      data-show-more-button
+    >
+      Show More
+    </button>
+  </div>
+
+  <div class="md:hidden mt-8 flex justify-center">
+    <a href="{{ section.settings.collection.url }}" class="flex items-center gap-2 hover:underline">
+      <span class="font-['Poppins sans serif'] font-semibold text-md leading-[140%] tracking-[0.03em] text-center color-[#5C553A]">
+        {{- section.settings.view_all_text | escape -}}
+      </span>
+      <svg
+        viewBox="0 0 20 20"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-label="arrow right"
+        class="h-7 w-7"
+      >
+        <path d="M3.33334 10H16.6667M16.6667 10L11.6667 5M16.6667 10L11.6667 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+    </a>
+  </div>
+</platter-featured-collection>
+
+<script src="{{ 'platter-featured-collection.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Featured Collection",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section title",
+      "default": "Best Sellers"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 10,
+      "label": "Products to show"
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "View all text",
+      "default": "Shop All Best Sellers"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Collection"
+    }
+  ]
+}
+{% endschema %}

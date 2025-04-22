@@ -30,14 +30,15 @@ class PlatterFeaturedCollection extends HTMLElement {
       "wheel",
       (e) => {
         if (window.innerWidth >= 768) {
-          e.preventDefault();
+          if (Math.abs(e.deltaX) > Math.abs(e.deltaY) || e.shiftKey) {
+            e.preventDefault();
 
-          const scrollAmount = e.shiftKey ? e.deltaY : e.deltaX;
+            const scrollAmount = e.shiftKey ? e.deltaY : e.deltaX;
+            this.scrollContainer.scrollLeft += scrollAmount;
 
-          this.scrollContainer.scrollLeft += scrollAmount;
-
-          if (this.scrollThumb && this.scrollBar) {
-            this.updateThumbPosition();
+            if (this.scrollThumb && this.scrollBar) {
+              this.updateThumbPosition();
+            }
           }
         }
       },

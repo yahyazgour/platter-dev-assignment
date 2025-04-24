@@ -1,0 +1,188 @@
+<platter-featured-collection class="block py-24 px-8 md:px-0 mx-auto max-w-[1920px]">
+  <div class="flex justify-between items-center mb-16 mx-auto overflow-x-auto md:px-12 lg:px-32 relative">
+    <span class="max-md:mx-auto font-source-serif-pro text-5xl font-[900] text-[#231F20] leading-tight tracking-tight py-2">
+      {{- section.settings.title | escape -}}
+    </span>
+
+    <a href="{{ section.settings.collection.url }}" class="flex items-center gap-2 hover:underline max-md:hidden">
+      <span class="font-['Poppins sans serif'] font-[600] text-2xl leading-[140%] tracking-[0.03em] text-center color-[#5C553A]">
+        {{- section.settings.view_all_text | escape -}}
+      </span>
+      {% render 'platter-icons', name: 'arrow', class: 'h-8 w-8' %}
+    </a>
+  </div>
+
+  <div class="relative w-full h-full overflow-hidden">
+    <div class="relative" style="--grid-gap--desktop: {{ section.settings.grid_gap_desktop }}px; --grid-gap--tablet: {{ section.settings.grid_gap_tablet }}px; --grid-gap--mobile: {{ section.settings.grid_gap_mobile }}px; --card-width--desktop: {{ section.settings.card_width_desktop }}%; --card-width--tablet: {{ section.settings.card_width_tablet }}%; --card-width--mobile: {{ section.settings.card_width_mobile }}%;">
+      <div class="relative">
+        <div class="flex justify-center">
+          <div
+            class="w-full max-md:flex max-md:flex-wrap gap-[var(--grid-gap--mobile)] md:flex md:mx-auto md:overflow-x-auto md:gap-[var(--grid-gap--tablet)] lg:gap-[var(--grid-gap--desktop)] md:pb-20 md:snap-mandatory md:snap-x scrollbar-none lg:overflow-hidden md:px-12 md:relative lg:px-32 will-change-transform"
+            data-scroll-container
+          >
+            {%- for product in section.settings.collection.products limit: section.settings.products_to_show -%}
+              {%
+                render 'platter-product-card',
+                product: product,
+                bestseller_text: section.settings.bestseller_text,
+                sale_text: section.settings.sale_text,
+                mobile_products_to_show: section.settings.mobile_products_to_show,
+                forloopIndex: forloop.index
+              %}
+            {%- endfor -%}
+          </div>
+        </div>
+
+        {% render 'platter-scroll-bar' %}
+      </div>
+    </div>
+  </div>
+
+  <div class="md:hidden mt-6 flex justify-center">
+    <button
+      type="button"
+      class="bg-black w-full hover:bg-gray-800 text-white py-6 px-8 rounded-full font-bold text-2xl transition-all duration-200 ease-in-out hover:-translate-y-0.5 active:translate-y-0"
+      data-show-more-button
+    >
+      {{ section.settings.show_more_text }}
+    </button>
+  </div>
+
+  <div class="md:hidden mt-8 flex justify-center">
+    <a href="{{ section.settings.collection.url }}" class="flex items-center gap-2 hover:underline">
+      <span class="font-['Poppins sans serif'] font-semibold text-md leading-[140%] tracking-[0.03em] text-center color-[#5C553A]">
+        {{- section.settings.view_all_text | escape -}}
+      </span>
+      {% render 'platter-icons', name: 'arrow', class: 'h-7 w-7' %}
+    </a>
+  </div>
+</platter-featured-collection>
+
+<script src="{{ 'platter-featured-collection.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Featured Collection",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section title",
+      "default": "Best Sellers"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap_desktop",
+      "min": 12,
+      "max": 48,
+      "step": 2,
+      "default": 24,
+      "label": "Grid gap - Desktop",
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap_tablet",
+      "min": 12,
+      "max": 36,
+      "step": 2,
+      "default": 18,
+      "label": "Grid gap - Tablet",
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap_mobile",
+      "min": 8,
+      "max": 24,
+      "step": 2,
+      "default": 12,
+      "label": "Grid gap - Mobile",
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "card_width_desktop",
+      "min": 15,
+      "max": 33,
+      "step": 1,
+      "default": 21,
+      "label": "Card width - Desktop",
+      "unit": "%"
+    },
+    {
+      "type": "range",
+      "id": "card_width_tablet",
+      "min": 20,
+      "max": 40,
+      "step": 1,
+      "default": 26,
+      "label": "Card width - Tablet",
+      "unit": "%"
+    },
+    {
+      "type": "range",
+      "id": "card_width_mobile",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "default": 50,
+      "label": "Card width - Mobile",
+      "unit": "%"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 10,
+      "label": "Products to show"
+    },
+    {
+      "type": "range",
+      "id": "mobile_products_to_show",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 4,
+      "label": "Products to show on mobile"
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "View all text",
+      "default": "Shop All Best Sellers"
+    },
+    {
+      "type": "text",
+      "id": "bestseller_text",
+      "label": "Bestseller tag text",
+      "default": "BEST SELLER"
+    },
+    {
+      "type": "text",
+      "id": "sale_text",
+      "label": "Sale tag text",
+      "default": "SAVE 15%"
+    },
+    {
+      "type": "text",
+      "id": "show_more_text",
+      "label": "Show more button text",
+      "default": "Show More"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Collection"
+    }
+  ]
+}
+{% endschema %}

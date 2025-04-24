@@ -1,0 +1,81 @@
+{% liquid
+  assign hide_on_mobile = false
+  if forloopIndex > mobile_products_to_show
+    assign hide_on_mobile = true
+  endif
+%}
+
+<article
+  class="group w-[calc(var(--card-width--mobile)-8px)] md:w-[var(--card-width--tablet)] lg:w-[var(--card-width--desktop)] shrink-0 flex flex-col rounded-lg overflow-hidden mb-6 md:mb-0 {% if hide_on_mobile %}max-md:hidden{% endif %} mobile-product"
+  data-scroll-item
+  data-product-card="{{ product.handle }}"
+  data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+>
+  <a
+    class="relative overflow-hidden aspect-square mb-6 rounded-2xl"
+    href="{{ product.url }}"
+    aria-label="{{ product.title }}"
+  >
+    <div class="w-full h-full transition-transform duration-400">
+      {%- capture image_sizes -%}(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 400px{%- endcapture -%}
+      {%- capture image_widths -%}400,800,1200,1600,2048{%- endcapture -%}
+      {%- capture image_classes -%}w-full h-full object-contain{%- endcapture -%}
+
+      <div class="absolute inset-0 transition-opacity duration-400 group-hover:opacity-0">
+        {% render 'platter-image',
+          image: product.featured_image,
+          image_sizes: image_sizes,
+          image_widths: image_widths,
+          image_classes: image_classes
+        %}
+      </div>
+
+      {% if product.images[1] != blank %}
+        <div class="absolute inset-0 opacity-0 transition-opacity duration-400 group-hover:opacity-100">
+          {% render 'platter-image',
+            image: product.images[1],
+            image_sizes: image_sizes,
+            image_widths: image_widths,
+            image_classes: image_classes
+          %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="absolute top-3 left-3 bg-[#FFFFFA] text-[#000000] border-1 border-[#000000] px-2 pt-1 rounded-full">
+      <div class="text-[8px] md:text-[10px] tracking-[0.04em] font-[500]">
+        {{ bestseller_text }}
+      </div>
+    </div>
+
+    {% if product.compare_at_price > product.price %}
+      <div class="absolute top-3 right-3 bg-[#5C7962] text-[#FFFFFA] border-1 border-[#000000] px-2 pt-1 rounded-full">
+        <div class="text-[8px] md:text-[10px] tracking-[0.04em] font-[500]">
+          {{ sale_text }}
+        </div>
+      </div>
+    {% endif %}
+  </a>
+
+  <div class="px-3 flex flex-col gap-5 mb-6 md:gap-4">
+    <a
+      href="{{ product.url }}"
+      class="block font-[400] font-bebas-neue text-[16px] md:text-3xl leading-none tracking-[0.03em] uppercase text-[#1C1D1D] hover:underline"
+    >
+      {{ product.title }}
+    </a>
+
+    <div class="flex items-center gap-2">
+      <div class="flex items-center gap-1">
+        {% render 'platter-icons', name: 'five-stars', class: 'w-4 h-4 text-black' %}
+      </div>
+      <span class="text-[11px] md:text-xl font-[400] text-[#707070]">
+        {{- product.metafields.reviews.rating_count | default: '1,234' }} Reviews
+      </span>
+    </div>
+
+    <div class="flex items-baseline gap-2 font-[500] text-[#1C1D1D] text-2xl leading-none uppercase">
+      <span>{{ product.price | money }}</span>
+    </div>
+  </div>
+</article>

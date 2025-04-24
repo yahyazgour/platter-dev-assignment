@@ -1,1 +1,17 @@
 @import "tailwindcss";
+
+@theme {
+  --font-bebas-neue: 'Bebas Neue', sans-serif;
+  --font-source-serif-pro: 'Source Serif Pro', serif;
+}
+
+@layer utilities {
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}

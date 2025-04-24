@@ -1,0 +1,46 @@
+{% liquid 
+  assign image_exists = true
+  assign image_src = image | image_url: width: width_value
+  if image_src == "" or image_src == null or image == false or image == ""
+     assign image_exists = false
+  endif
+
+  assign width_value = nil
+  assign double_image_width_value = nil
+  assign height_value = nil
+  assign double_image_height_value = nil
+  assign loading = loading | default: 'lazy'
+  assign fetchpriority = fetchpriority | default: 'low'
+  assign preload = preload | default: false
+
+  if height
+      assign height_value = height
+      assign double_image_height_value = height | times: 2
+  endif 
+
+  if width 
+      assign width_value = width 
+      assign double_image_width_value = width | times: 2 
+  endif
+%} 
+
+{%- capture image_style -%}
+  --width: auto; --height: auto; --max-width: {{ width_value | strip }}px;{% if height_value %}--max-height: {{ height_value | strip }}px;{% endif %}
+{%- endcapture -%}
+
+{% if image_exists == true %}
+  <picture class="{{ class }}">
+      <source srcset="{{ image | image_url: width: double_image_width_value, height: double_image_height_value }}" media="only screen and (-webkit-min-device-pixel-ratio: 1.5)">
+      {{ image | 
+          image_url: width: width_value, height: height_value | 
+          image_tag: 
+              widths: image_widths, 
+              sizes: image_sizes, 
+              class: image_classes, 
+              style: image_style,
+              loading: loading,
+              fetchpriority: fetchpriority,
+              preload: preload
+      }}
+  </picture>
+{% endif %}
